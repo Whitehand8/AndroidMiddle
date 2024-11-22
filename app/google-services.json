@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "827731689773",
+    "project_id": "godparttimejob",
+    "storage_bucket": "godparttimejob.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827731689773:android:b4ddc05036498c407793a4",
+        "android_client_info": {
+          "package_name": "com.example.godparttimejob"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwdSQ9nj5eg0Bwhh2HGAR2bBJ_g1hSes4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

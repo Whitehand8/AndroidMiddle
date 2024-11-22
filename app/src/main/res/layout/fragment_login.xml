@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.LoginFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="90dp"
+        android:padding="16dp"> <!-- 전체 레이아웃에 패딩 추가 -->
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그인"
+            android:textSize="50sp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" /> <!-- 간격 추가 -->
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:inputType="text"
+            android:hint="이메일"
+            android:layout_marginBottom="8dp" /> <!-- 간격 추가 -->
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:inputType="textPassword"
+            android:hint="비밀번호(최소 6자리)"
+            android:layout_marginBottom="16dp" /> <!-- 간격 추가 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"> <!-- 간격 추가 -->
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="로그인"
+                android:layout_marginEnd="8dp" /> <!-- 간격 추가 -->
+
+            <Button
+                android:id="@+id/buttonJoin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="회원가입" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/buttonGoogleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Google로 로그인하기"
+            android:drawableLeft="@drawable/common_google_signin_btn_icon_dark_normal_background"/>
+    </LinearLayout>
+
+</FrameLayout>
