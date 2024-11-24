@@ -3,7 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/loginFragment">
+
+    <!-- 로그인 Fragment -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.godparttimejob.ui.login.LoginFragment"
+        android:label="로그인"
+        tools:layout="@layout/fragment_login">
+        <!-- 로그인 후 홈 화면으로 이동 -->
+        <action
+            android:id="@+id/action_loginFragment_to_nav_home"
+            app:destination="@id/nav_home" />
+    </fragment>
 
     <!-- 홈 Fragment -->
     <fragment
@@ -39,7 +51,7 @@
         android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
         android:label="회사 상세 정보"
         tools:layout="@layout/fragment_company_detail">
-        <!-- 리뷰 작성 페이지로 이동하는 액션 추가 -->
+        <!-- 리뷰 작성 페이지로 이동하는 액션 -->
         <action
             android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
             app:destination="@id/writeReviewFragment" />
@@ -51,13 +63,6 @@
         android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
         android:label="회사 설정"
         tools:layout="@layout/fragment_setting_company" />
-
-    <!-- 로그인 Fragment -->
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.godparttimejob.ui.login.LoginFragment"
-        android:label="로그인"
-        tools:layout="@layout/fragment_login" />
 
     <!-- 리뷰 작성 Fragment -->
     <fragment
