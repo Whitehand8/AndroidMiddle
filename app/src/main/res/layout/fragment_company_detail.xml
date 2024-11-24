@@ -54,19 +54,13 @@
             android:layout_height="wrap_content" />
 
         <!-- 리뷰 입력 -->
-        <EditText
-            android:id="@+id/editReviewComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="리뷰 작성하기"
-            android:padding="8dp"
-            android:background="@android:color/darker_gray" />
-
         <Button
-            android:id="@+id/buttonSubmitReview"
+            android:id="@+id/buttonWriteReview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="리뷰 등록" />
+            android:text="리뷰 작성하기"
+            android:layout_marginTop="16dp" />
+
 
     </LinearLayout>
 </ScrollView>

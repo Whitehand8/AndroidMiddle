@@ -1,0 +1,89 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 일의 강도 별점 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일의 강도 (1: 힘듦, 5: 쉬움)"
+            android:textSize="16sp" />
+        <RatingBar
+            android:id="@+id/ratingWorkIntensity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+        <!-- 봉급 별점 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="봉급 (1: 적음, 5: 만족)"
+            android:textSize="16sp" />
+        <RatingBar
+            android:id="@+id/ratingSalary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+        <!-- 환경 별점 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="환경 (1: 별로, 5: 만족)"
+            android:textSize="16sp" />
+        <RatingBar
+            android:id="@+id/ratingEnvironment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0" />
+
+        <!-- 줄글 리뷰 -->
+        <EditText
+            android:id="@+id/editReviewComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="리뷰를 작성하세요 (300자 이내)"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="5"
+            android:maxLength="300" />
+
+        <!-- 이미지 업로드 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 업로드 (최대 2장)"
+            android:textSize="16sp"
+            android:paddingTop="16dp" />
+        <Button
+            android:id="@+id/buttonUploadImage1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 1 업로드" />
+        <Button
+            android:id="@+id/buttonUploadImage2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 2 업로드"
+            android:layout_marginTop="8dp" />
+
+        <!-- 리뷰 등록 버튼 -->
+        <Button
+            android:id="@+id/buttonSubmitReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="리뷰 등록"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>

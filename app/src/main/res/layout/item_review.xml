@@ -1,0 +1,38 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@android:color/white">
+
+    <!-- 작성자 이름 -->
+    <TextView
+        android:id="@+id/textUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="작성자 이름"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:paddingBottom="4dp" />
+
+    <!-- 리뷰 내용 -->
+    <TextView
+        android:id="@+id/textComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="리뷰 내용"
+        android:textSize="14sp"
+        android:paddingBottom="4dp" />
+
+    <!-- 평균 평점 -->
+    <TextView
+        android:id="@+id/textAverageRating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="평균 평점: 4.5"
+        android:textSize="14sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:paddingBottom="4dp" />
+
+</LinearLayout>

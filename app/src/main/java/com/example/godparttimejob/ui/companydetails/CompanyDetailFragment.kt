@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.godparttimejob.R
+import com.example.godparttimejob.ui.review.WriteReviewFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -20,8 +25,7 @@ class CompanyDetailFragment : Fragment() {
     private lateinit var textCompanyDescription: TextView
     private lateinit var textRecruitingStatus: TextView
     private lateinit var recyclerReviews: RecyclerView
-    private lateinit var editReviewComment: EditText
-    private lateinit var buttonSubmitReview: Button
+    private lateinit var buttonWriteReview: Button // 리뷰 작성 버튼 추가
 
     private var companyId: String? = null // 전달받은 회사 ID
 
@@ -39,8 +43,7 @@ class CompanyDetailFragment : Fragment() {
         textCompanyDescription = view.findViewById(R.id.textCompanyDescription)
         textRecruitingStatus = view.findViewById(R.id.textRecruitingStatus)
         recyclerReviews = view.findViewById(R.id.recyclerReviews)
-        editReviewComment = view.findViewById(R.id.editReviewComment)
-        buttonSubmitReview = view.findViewById(R.id.buttonSubmitReview)
+        buttonWriteReview = view.findViewById(R.id.buttonWriteReview) // 버튼 초기화
 
         recyclerReviews.layoutManager = LinearLayoutManager(requireContext())
 
@@ -48,8 +51,8 @@ class CompanyDetailFragment : Fragment() {
         companyId = arguments?.getString("companyId")
         companyId?.let { loadCompanyDetails(it) }
 
-        // 리뷰 작성 버튼 클릭
-        buttonSubmitReview.setOnClickListener { submitReview() }
+        // 리뷰 작성 페이지로 이동
+        buttonWriteReview.setOnClickListener { navigateToWriteReview() }
 
         return view
     }
@@ -67,12 +70,15 @@ class CompanyDetailFragment : Fragment() {
                     textCompanyDescription.text = description
                     textRecruitingStatus.text = if (isRecruiting) "모집 중" else "모집 종료"
 
-                    // 이미지 로드
+                    // 이미지 로드 (Glide 사용)
                     // Glide.with(this).load(largeImageUrl).into(imageLargeCompany)
 
                     // 리뷰 리스트 가져오기
                     loadReviews(companyId)
                 }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "회사 정보를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -84,33 +90,22 @@ class CompanyDetailFragment : Fragment() {
                 val reviews = querySnapshot.toObjects(Review::class.java)
                 recyclerReviews.adapter = ReviewAdapter(reviews)
             }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "리뷰를 가져오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
     }
 
-    private fun submitReview() {
-        val comment = editReviewComment.text.toString().trim()
-        if (comment.isNotEmpty()) {
-            val review = hashMapOf(
-                "userId" to "USER_ID", // 실제 사용자 ID로 대체
-                "userName" to "사용자 이름", // 실제 사용자 이름으로 대체
-                "rating" to 5, // 별점은 고정, 추가 구현 가능
-                "comment" to comment,
-                "createdAt" to System.currentTimeMillis()
-            )
 
-            companyId?.let { id ->
-                db.collection("companies").document(id).collection("reviews")
-                    .add(review)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
-                        editReviewComment.text.clear()
-                        loadReviews(id)
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "리뷰 등록 실패!", Toast.LENGTH_SHORT).show()
-                    }
-            }
-        } else {
-            Toast.makeText(requireContext(), "리뷰 내용을 입력하세요!", Toast.LENGTH_SHORT).show()
-        }
+    private fun navigateToWriteReview() {
+        val bundle = Bundle()
+        bundle.putString("companyId", companyId)
+
+        val writeReviewFragment = WriteReviewFragment()
+        writeReviewFragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, writeReviewFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
