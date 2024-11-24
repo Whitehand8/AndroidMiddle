@@ -97,15 +97,12 @@ class CompanyDetailFragment : Fragment() {
 
 
     private fun navigateToWriteReview() {
-        val bundle = Bundle()
-        bundle.putString("companyId", companyId)
-
-        val writeReviewFragment = WriteReviewFragment()
-        writeReviewFragment.arguments = bundle
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, writeReviewFragment)
-            .addToBackStack(null)
-            .commit()
+        val bundle = Bundle().apply {
+            putString("companyId", companyId)
+        }
+        view?.let { currentView ->
+            androidx.navigation.Navigation.findNavController(currentView)
+                .navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle)
+        }
     }
 }

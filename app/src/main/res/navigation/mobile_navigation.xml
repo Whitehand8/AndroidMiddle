@@ -5,26 +5,64 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
+    <!-- 홈 Fragment -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.godparttimejob.ui.home.HomeFragment"
         android:label="@string/nav_1"
         tools:layout="@layout/fragment_home" />
 
+    <!-- 검색 Fragment -->
     <fragment
         android:id="@+id/nav_search"
         android:name="com.example.godparttimejob.ui.search.SearchFragment"
         android:label="@string/nav_2"
         tools:layout="@layout/fragment_search" />
+
+    <!-- 즐겨찾기 Fragment -->
     <fragment
         android:id="@+id/nav_favorite"
         android:name="com.example.godparttimejob.ui.favorite.FavoriteFragment"
         android:label="@string/nav_3"
         tools:layout="@layout/fragment_favorite" />
 
+    <!-- 마이페이지 Fragment -->
     <fragment
         android:id="@+id/nav_mypage"
         android:name="com.example.godparttimejob.ui.mypage.MypageFragment"
         android:label="@string/nav_4"
         tools:layout="@layout/fragment_mypage" />
+
+    <!-- 회사 상세 정보 Fragment -->
+    <fragment
+        android:id="@+id/companyDetailFragment"
+        android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
+        android:label="회사 상세 정보"
+        tools:layout="@layout/fragment_company_detail">
+        <!-- 리뷰 작성 페이지로 이동하는 액션 추가 -->
+        <action
+            android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
+            app:destination="@id/writeReviewFragment" />
+    </fragment>
+
+    <!-- 회사 설정 Fragment -->
+    <fragment
+        android:id="@+id/settingCompanyFragment"
+        android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
+        android:label="회사 설정"
+        tools:layout="@layout/fragment_setting_company" />
+
+    <!-- 로그인 Fragment -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.godparttimejob.ui.login.LoginFragment"
+        android:label="로그인"
+        tools:layout="@layout/fragment_login" />
+
+    <!-- 리뷰 작성 Fragment -->
+    <fragment
+        android:id="@+id/writeReviewFragment"
+        android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
+        android:label="리뷰 작성"
+        tools:layout="@layout/fragment_write_review" />
 </navigation>
