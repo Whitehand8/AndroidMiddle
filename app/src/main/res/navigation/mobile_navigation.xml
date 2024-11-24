@@ -51,11 +51,16 @@
         android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
         android:label="회사 상세 정보"
         tools:layout="@layout/fragment_company_detail">
-        <!-- 리뷰 작성 페이지로 이동하는 액션 -->
         <action
             android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
             app:destination="@id/writeReviewFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/writeReviewFragment"
+        android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
+        android:label="리뷰 작성"
+        tools:layout="@layout/fragment_write_review" />
 
     <!-- 회사 설정 Fragment -->
     <fragment
@@ -63,11 +68,4 @@
         android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
         android:label="회사 설정"
         tools:layout="@layout/fragment_setting_company" />
-
-    <!-- 리뷰 작성 Fragment -->
-    <fragment
-        android:id="@+id/writeReviewFragment"
-        android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
-        android:label="리뷰 작성"
-        tools:layout="@layout/fragment_write_review" />
 </navigation>

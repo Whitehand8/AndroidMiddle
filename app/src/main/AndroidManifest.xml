@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GodPartTimeJob"
         tools:targetApi="31">
+
+        <!-- SplashActivity (앱 시작 화면) -->
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
@@ -21,6 +23,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity (일반 사용자 대시보드) -->
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.GodPartTimeJob"
+            android:exported="true" />
+
+        <!-- AdminDashboardActivity (운영자 대시보드) -->
+        <!--<activity
+            android:name=".ui.admin.AdminDashboardActivity"
+            android:theme="@style/Theme.GodPartTimeJob"
+            android:exported="true" />
+        -->
     </application>
 
 </manifest>
