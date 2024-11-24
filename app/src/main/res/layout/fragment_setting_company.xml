@@ -1,0 +1,85 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/editCompanyName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="회사 이름"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:gravity="center_vertical" />
+
+
+        <!-- 회사 소개 입력 -->
+        <EditText
+            android:id="@+id/editCompanyDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="회사 소개"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:gravity="top" />
+
+        <!-- 큰 이미지 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="큰 이미지" />
+
+        <ImageView
+            android:id="@+id/imageLargeCompany"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            android:id="@+id/buttonUploadLargeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="큰 이미지 업로드" />
+
+        <!-- 아이콘 이미지 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="아이콘 이미지" />
+
+        <ImageView
+            android:id="@+id/imageIconCompany"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray" />
+
+        <Button
+            android:id="@+id/buttonUploadIconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="아이콘 이미지 업로드" />
+
+        <!-- 모집 여부 -->
+        <CheckBox
+            android:id="@+id/checkboxRecruiting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="현재 모집 중" />
+
+        <!-- 회사 등록 버튼 -->
+        <Button
+            android:id="@+id/buttonRegisterCompany"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회사 등록" />
+
+    </LinearLayout>
+</ScrollView>
