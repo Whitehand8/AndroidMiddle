@@ -11,12 +11,14 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.godparttimejob.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 class WriteReviewFragment : Fragment() {
 
+    private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
 
@@ -41,6 +43,7 @@ class WriteReviewFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_write_review, container, false)
 
+        auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
@@ -105,6 +108,7 @@ class WriteReviewFragment : Fragment() {
     }
 
     private fun submitReview() {
+        val userId = auth.currentUser?.uid ?: return // 로그인된 사용자 ID 가져오기
         val workIntensity = ratingWorkIntensity.rating.toInt()
         val salary = ratingSalary.rating.toInt()
         val environment = ratingEnvironment.rating.toInt()
@@ -116,7 +120,7 @@ class WriteReviewFragment : Fragment() {
         }
 
         val review = hashMapOf(
-            "userId" to "USER_ID", // 실제 사용자 ID로 대체
+            "userId" to userId,
             "userName" to "사용자 이름", // 실제 사용자 이름으로 대체
             "workIntensity" to workIntensity,
             "salary" to salary,
@@ -139,6 +143,7 @@ class WriteReviewFragment : Fragment() {
                         .add(review)
                         .addOnSuccessListener {
                             Toast.makeText(requireContext(), "리뷰가 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                            updateReviewCount(userId) // 리뷰 수 업데이트
                             requireActivity().onBackPressed()
                         }
                         .addOnFailureListener {
@@ -146,6 +151,25 @@ class WriteReviewFragment : Fragment() {
                         }
                 }
             }
+        }
+    }
+
+    private fun updateReviewCount(userId: String) {
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val currentReviews = document.getLong("reviews") ?: 0L
+                userRef.update("reviews", currentReviews + 1)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "리뷰 수가 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(requireContext(), "리뷰 수 업데이트 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+        }.addOnFailureListener { e ->
+            Toast.makeText(requireContext(), "사용자 데이터를 가져오는 데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 }
