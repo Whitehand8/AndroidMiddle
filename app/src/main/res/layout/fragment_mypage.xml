@@ -1,22 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.mypage.MypageFragment">
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/text_mypage"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical">
+
+        <!-- 프로필 사진 -->
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_profile_placeholder"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="프로필 사진" />
+
+        <!-- 이메일 -->
+        <TextView
+            android:id="@+id/textEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 작성한 리뷰 수 -->
+        <TextView
+            android:id="@+id/textReviewsCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="작성한 리뷰: 0개"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 지역 -->
+        <Button
+            android:id="@+id/buttonUpdateLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지역 정보 없음"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 전화번호 -->
+        <Button
+            android:id="@+id/buttonUpdateTele"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="전화번호 없음"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 생일 -->
+        <Button
+            android:id="@+id/buttonUpdateBirthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="생일 정보 없음"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 설정 버튼 -->
+        <Button
+            android:id="@+id/buttonSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="설정"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 계정 삭제 버튼 -->
+        <Button
+            android:id="@+id/buttonDeleteAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="계정 삭제"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</ScrollView>

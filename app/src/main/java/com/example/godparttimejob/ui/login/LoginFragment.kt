@@ -1,6 +1,5 @@
 package com.example.godparttimejob.ui.login
 
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,16 +14,18 @@ import com.example.godparttimejob.MainActivity
 import com.example.godparttimejob.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class LoginFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
     private lateinit var emailEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
     private lateinit var registerButton: Button
-    private lateinit var adminLoginButton: Button // 운영자 로그인 버튼
+    private lateinit var adminLoginButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,18 +33,16 @@ class LoginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        // Firebase 초기화
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
 
-        // View 초기화
         emailEditText = view.findViewById(R.id.editEmail)
         passwordEditText = view.findViewById(R.id.editPassword)
         loginButton = view.findViewById(R.id.buttonLogin)
         registerButton = view.findViewById(R.id.buttonJoin)
         adminLoginButton = view.findViewById(R.id.buttonAdminLogin)
 
-        // 일반 로그인 버튼
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -55,7 +54,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // 회원가입 버튼
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -71,11 +69,10 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // 운영자 로그인 버튼
         adminLoginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
-            val adminCode = "1124" // 운영자 코드
+            val adminCode = "1124"
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password, adminCode)
@@ -89,13 +86,11 @@ class LoginFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // 툴바 숨기기
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // 툴바 다시 표시
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
@@ -105,33 +100,34 @@ class LoginFragment : Fragment() {
                 if (task.isSuccessful) {
                     val user = auth.currentUser
                     user?.let {
-                        val userData = hashMapOf(
-                            "email" to it.email,
-                            "role" to "user", // 기본적으로 일반 사용자로 설정
-                            "location" to null, // 초기화 시 null 값 설정
-                            "tele" to null,     // 초기화 시 null 값 설정
-                            "birthday" to null, // 초기화 시 null 값 설정
-                            "reviews" to 0,     // 초기 리뷰 수는 0으로 초기화
-                            "createdAt" to System.currentTimeMillis()
-                        )
+                        uploadDefaultProfileImage(it.uid) { imageUrl ->
+                            val userData = hashMapOf(
+                                "email" to it.email,
+                                "role" to "user",
+                                "location" to null,
+                                "tele" to null,
+                                "birthday" to null,
+                                "reviews" to 0,
+                                "profileImageUrl" to imageUrl,
+                                "createdAt" to System.currentTimeMillis()
+                            )
 
-                        // Firestore에 사용자 정보 저장
-                        db.collection("users").document(it.uid)
-                            .set(userData)
-                            .addOnSuccessListener {
-                                // 이메일 인증 메일 발송
-                                user.sendEmailVerification() // 수정된 부분
-                                    .addOnCompleteListener { emailTask ->
-                                        if (emailTask.isSuccessful) {
-                                            Toast.makeText(requireContext(), "회원가입 성공! 이메일 인증을 진행해주세요.", Toast.LENGTH_LONG).show()
-                                        } else {
-                                            Toast.makeText(requireContext(), "이메일 인증 메일 발송 실패!", Toast.LENGTH_LONG).show()
+                            db.collection("users").document(it.uid)
+                                .set(userData)
+                                .addOnSuccessListener {
+                                    user.sendEmailVerification()
+                                        .addOnCompleteListener { emailTask ->
+                                            if (emailTask.isSuccessful) {
+                                                Toast.makeText(requireContext(), "회원가입 성공! 이메일 인증을 진행해주세요.", Toast.LENGTH_LONG).show()
+                                            } else {
+                                                Toast.makeText(requireContext(), "이메일 인증 메일 발송 실패!", Toast.LENGTH_LONG).show()
+                                            }
                                         }
-                                    }
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(requireContext(), "Firestore 저장 실패: ${e.message}", Toast.LENGTH_LONG).show()
-                            }
+                                }
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(requireContext(), "Firestore 저장 실패: ${e.message}", Toast.LENGTH_LONG).show()
+                                }
+                        }
                     }
                 } else {
                     Toast.makeText(requireContext(), "회원가입 실패!", Toast.LENGTH_LONG).show()
@@ -139,6 +135,18 @@ class LoginFragment : Fragment() {
             }
     }
 
+    private fun uploadDefaultProfileImage(userId: String, onComplete: (String) -> Unit) {
+        val defaultImageRef = storage.reference.child("profile_images/default_profile.jpg")
+
+        defaultImageRef.downloadUrl
+            .addOnSuccessListener { uri ->
+                onComplete(uri.toString())
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "기본 프로필 이미지를 설정할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                onComplete("") // 기본 값으로 빈 URL 반환
+            }
+    }
 
     private fun loginUser(email: String, password: String, adminCode: String? = null) {
         auth.signInWithEmailAndPassword(email, password)
@@ -177,13 +185,13 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToAdminDashboard() {
-        val intent = Intent(requireContext(), MainActivity::class.java) // 운영자 전용 Activity 변경 가능
+        val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }
 
     private fun navigateToUserDashboard() {
-        val intent = Intent(requireContext(), MainActivity::class.java) // 사용자용 Activity 변경 가능
+        val intent = Intent(requireContext(), MainActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.gms.google-services")
+    id("com.google.gms.google-services") // Google Services 플러그인
 }
 
 android {
@@ -27,20 +27,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.10.1")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -49,23 +51,18 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.firebase.auth.ktx)
 
-    // Firebase BoM (Bill of Materials)
+    // Firebase BOM 및 서비스
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-
-    // Firebase Services
-    implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx") // Firestore 추가
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 
-    // Google Play Services for Authentication
-    implementation("com.google.android.gms:play-services-auth:20.6.0") // 최신 버전으로 수정
-    implementation(libs.firebase.storage.ktx)
+    // Glide 이미지 처리 라이브러리
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
-    // Testing Libraries
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+    // 테스트 라이브러리
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
