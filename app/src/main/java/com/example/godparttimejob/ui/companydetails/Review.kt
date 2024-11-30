@@ -7,5 +7,6 @@ data class Review(
     val salary: Int = 0,
     val environment: Int = 0,
     val comment: String = "",
+    var likes: Int = 0, // 좋아요 수 추가
     val createdAt: Long = 0L
 )

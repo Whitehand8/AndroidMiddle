@@ -3,11 +3,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.godparttimejob.R
+import com.example.godparttimejob.ui.companydetails.Review
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ReviewAdapter(
@@ -34,6 +36,8 @@ class ReviewAdapter(
         private val textSalary: TextView = itemView.findViewById(R.id.textSalary)
         private val textEnvironment: TextView = itemView.findViewById(R.id.textEnvironment)
         private val textComment: TextView = itemView.findViewById(R.id.textComment)
+        private val buttonLike: ImageButton = itemView.findViewById(R.id.buttonLike)
+        private val textLikeCount: TextView = itemView.findViewById(R.id.textLikeCount)
         private val buttonReport: Button = itemView.findViewById(R.id.buttonReport)
 
         fun bind(review: Review) {
@@ -42,10 +46,29 @@ class ReviewAdapter(
             textSalary.text = "급여: ★${review.salary}"
             textEnvironment.text = "환경: ★${review.environment}"
             textComment.text = review.comment
+            textLikeCount.text = review.likes.toString()
+
+            buttonLike.setOnClickListener {
+                handleLike(review)
+            }
 
             buttonReport.setOnClickListener {
                 showReportDialog(review)
             }
+        }
+
+        private fun handleLike(review: Review) {
+            val reviewRef = db.collection("companies").document(companyId)
+                .collection("reviews").document(review.id!!)
+            reviewRef.update("likes", review.likes + 1)
+                .addOnSuccessListener {
+                    Toast.makeText(itemView.context, "좋아요를 눌렀습니다!", Toast.LENGTH_SHORT).show()
+                    review.likes += 1
+                    textLikeCount.text = review.likes.toString()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(itemView.context, "좋아요 실패!", Toast.LENGTH_SHORT).show()
+                }
         }
 
         private fun showReportDialog(review: Review) {
