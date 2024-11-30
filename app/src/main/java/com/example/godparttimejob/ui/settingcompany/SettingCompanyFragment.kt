@@ -5,23 +5,26 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.godparttimejob.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
 class SettingCompanyFragment : Fragment() {
 
+    private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
 
     private lateinit var editCompanyName: EditText
     private lateinit var editCompanyDescription: EditText
+    private lateinit var editCompanyAddress: EditText // 주소 입력 필드
     private lateinit var imageLargeCompany: ImageView
     private lateinit var buttonUploadLargeImage: Button
     private lateinit var imageIconCompany: ImageView
@@ -40,13 +43,13 @@ class SettingCompanyFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_setting_company, container, false)
 
-        // Firebase 초기화
+        auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
-        // View 초기화
         editCompanyName = view.findViewById(R.id.editCompanyName)
         editCompanyDescription = view.findViewById(R.id.editCompanyDescription)
+        editCompanyAddress = view.findViewById(R.id.editCompanyAddress) // 주소 필드 초기화
         imageLargeCompany = view.findViewById(R.id.imageLargeCompany)
         buttonUploadLargeImage = view.findViewById(R.id.buttonUploadLargeImage)
         imageIconCompany = view.findViewById(R.id.imageIconCompany)
@@ -54,19 +57,33 @@ class SettingCompanyFragment : Fragment() {
         checkboxRecruiting = view.findViewById(R.id.checkboxRecruiting)
         buttonRegisterCompany = view.findViewById(R.id.buttonRegisterCompany)
 
-        // 큰 이미지 업로드 버튼
         buttonUploadLargeImage.setOnClickListener { selectImage(true) }
-
-        // 아이콘 이미지 업로드 버튼
         buttonUploadIconImage.setOnClickListener { selectImage(false) }
 
-        // 회사 등록 버튼
-        buttonRegisterCompany.setOnClickListener { registerCompany() }
+        checkIfAdmin() // 운영자 여부 확인
 
         return view
     }
 
-    // 이미지 선택
+    private fun checkIfAdmin() {
+        val currentUser = auth.currentUser ?: return
+        db.collection("users").document(currentUser.uid)
+            .get()
+            .addOnSuccessListener { document ->
+                val role = document.getString("role")
+                if (role == "admin") {
+                    buttonRegisterCompany.setOnClickListener { registerCompany() }
+                } else {
+                    Toast.makeText(requireContext(), "운영자만 접근할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                    requireActivity().onBackPressed()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "운영자 권한 확인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                requireActivity().onBackPressed()
+            }
+    }
+
     private fun selectImage(isLargeImage: Boolean) {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*"
@@ -74,7 +91,6 @@ class SettingCompanyFragment : Fragment() {
         launcher.launch(intent)
     }
 
-    // 큰 이미지 선택 결과 처리
     private val largeImagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -84,7 +100,6 @@ class SettingCompanyFragment : Fragment() {
         }
     }
 
-    // 아이콘 이미지 선택 결과 처리
     private val iconImagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -94,8 +109,7 @@ class SettingCompanyFragment : Fragment() {
         }
     }
 
-    // Firebase Storage에 이미지 업로드
-    private fun uploadImageToStorage(uri: Uri?, isLargeImage: Boolean, onComplete: (String?) -> Unit) {
+    private fun uploadImageToStorage(uri: Uri?, onComplete: (String?) -> Unit) {
         if (uri == null) {
             onComplete(null)
             return
@@ -115,36 +129,35 @@ class SettingCompanyFragment : Fragment() {
             }
     }
 
-    // 회사 정보 등록
     private fun registerCompany() {
         val name = editCompanyName.text.toString().trim()
         val description = editCompanyDescription.text.toString().trim()
+        val address = editCompanyAddress.text.toString().trim() // 주소 값 가져오기
         val isRecruiting = checkboxRecruiting.isChecked
 
-        if (name.isEmpty() || description.isEmpty()) {
+        if (name.isEmpty() || description.isEmpty() || address.isEmpty()) {
             Toast.makeText(requireContext(), "모든 필드를 입력하세요!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 이미지 업로드
-        uploadImageToStorage(largeImageUri, true) { largeUrl ->
+        uploadImageToStorage(largeImageUri) { largeUrl ->
             if (largeUrl == null) {
                 Toast.makeText(requireContext(), "큰 이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
                 return@uploadImageToStorage
             }
             largeImageUrl = largeUrl
 
-            uploadImageToStorage(iconImageUri, false) { iconUrl ->
+            uploadImageToStorage(iconImageUri) { iconUrl ->
                 if (iconUrl == null) {
                     Toast.makeText(requireContext(), "아이콘 이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
                     return@uploadImageToStorage
                 }
                 iconImageUrl = iconUrl
 
-                // Firestore에 데이터 저장
                 val companyData = hashMapOf(
                     "name" to name,
                     "description" to description,
+                    "address" to address, // 주소 데이터 추가
                     "largeImageUrl" to largeImageUrl,
                     "iconImageUrl" to iconImageUrl,
                     "isRecruiting" to isRecruiting,
@@ -155,6 +168,7 @@ class SettingCompanyFragment : Fragment() {
                     .add(companyData)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "회사 등록 성공!", Toast.LENGTH_SHORT).show()
+                        requireActivity().onBackPressed()
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(requireContext(), "회사 등록 실패: ${e.message}", Toast.LENGTH_SHORT).show()

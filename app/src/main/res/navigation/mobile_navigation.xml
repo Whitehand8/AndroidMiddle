@@ -54,13 +54,24 @@
         <action
             android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
             app:destination="@id/writeReviewFragment" />
+        <action
+            android:id="@+id/action_companyDetailFragment_to_MoreReviewsFragment"
+            app:destination="@id/moreReviewsFragment" /> <!-- 리뷰 더보기 액션 추가 -->
     </fragment>
 
+    <!-- 리뷰 작성 Fragment -->
     <fragment
         android:id="@+id/writeReviewFragment"
         android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
         android:label="리뷰 작성"
         tools:layout="@layout/fragment_write_review" />
+
+    <!-- 리뷰 더보기 Fragment -->
+    <fragment
+        android:id="@+id/moreReviewsFragment"
+        android:name="com.example.godparttimejob.ui.moreReviews.MoreReviewsFragment"
+        android:label="리뷰 더보기"
+        tools:layout="@layout/fragment_more_reviews" /> <!-- 새로운 리뷰 더보기 Fragment 추가 -->
 
     <!-- 회사 설정 Fragment -->
     <fragment

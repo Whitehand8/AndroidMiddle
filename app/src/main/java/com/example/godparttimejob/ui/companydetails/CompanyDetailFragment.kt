@@ -1,13 +1,11 @@
 package com.example.godparttimejob.ui.companydetails
 
+import ReviewAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,9 +20,11 @@ class CompanyDetailFragment : Fragment() {
     private lateinit var imageLargeCompany: ImageView
     private lateinit var textCompanyName: TextView
     private lateinit var textCompanyDescription: TextView
+    private lateinit var textCompanyAddress: TextView
     private lateinit var textRecruitingStatus: TextView
     private lateinit var recyclerReviews: RecyclerView
     private lateinit var buttonWriteReview: Button
+    private lateinit var buttonMoreReviews: Button
 
     private var companyId: String? = null
 
@@ -36,12 +36,15 @@ class CompanyDetailFragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
 
+        // View 초기화
         imageLargeCompany = view.findViewById(R.id.imageLargeCompany)
         textCompanyName = view.findViewById(R.id.textCompanyName)
         textCompanyDescription = view.findViewById(R.id.textCompanyDescription)
+        textCompanyAddress = view.findViewById(R.id.textCompanyAddress)
         textRecruitingStatus = view.findViewById(R.id.textRecruitingStatus)
         recyclerReviews = view.findViewById(R.id.recyclerReviews)
         buttonWriteReview = view.findViewById(R.id.buttonWriteReview)
+        buttonMoreReviews = view.findViewById(R.id.buttonMoreReviews)
 
         recyclerReviews.layoutManager = LinearLayoutManager(requireContext())
 
@@ -49,6 +52,7 @@ class CompanyDetailFragment : Fragment() {
         companyId?.let { loadCompanyDetails(it) }
 
         buttonWriteReview.setOnClickListener { navigateToWriteReview() }
+        buttonMoreReviews.setOnClickListener { navigateToMoreReviews() }
 
         return view
     }
@@ -59,11 +63,13 @@ class CompanyDetailFragment : Fragment() {
                 if (document != null && document.exists()) {
                     val name = document.getString("name")
                     val description = document.getString("description")
+                    val address = document.getString("address")
                     val largeImageUrl = document.getString("largeImageUrl")
                     val isRecruiting = document.getBoolean("isRecruiting") ?: false
 
                     textCompanyName.text = name
                     textCompanyDescription.text = description
+                    textCompanyAddress.text = address ?: "주소 정보 없음"
                     textRecruitingStatus.text = if (isRecruiting) "모집 중" else "모집 종료"
 
                     if (!largeImageUrl.isNullOrEmpty()) {
@@ -81,10 +87,11 @@ class CompanyDetailFragment : Fragment() {
     private fun loadReviews(companyId: String) {
         db.collection("companies").document(companyId).collection("reviews")
             .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(3) // 최신 리뷰 3개만 로드
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val reviews = querySnapshot.toObjects(Review::class.java)
-                recyclerReviews.adapter = ReviewAdapter(reviews)
+                recyclerReviews.adapter = ReviewAdapter(reviews, db, companyId!!)
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "리뷰를 가져오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
@@ -98,6 +105,16 @@ class CompanyDetailFragment : Fragment() {
         view?.let { currentView ->
             androidx.navigation.Navigation.findNavController(currentView)
                 .navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle)
+        }
+    }
+
+    private fun navigateToMoreReviews() {
+        val bundle = Bundle().apply {
+            putString("companyId", companyId)
+        }
+        view?.let { currentView ->
+            androidx.navigation.Navigation.findNavController(currentView)
+                .navigate(R.id.action_companyDetailFragment_to_MoreReviewsFragment, bundle)
         }
     }
 }

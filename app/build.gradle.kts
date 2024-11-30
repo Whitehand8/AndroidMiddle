@@ -61,6 +61,7 @@ dependencies {
 
     // Glide 이미지 처리 라이브러리
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.places)
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.1")
 
     // 테스트 라이브러리

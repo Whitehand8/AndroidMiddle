@@ -1,69 +1,87 @@
-package com.example.godparttimejob.ui.companydetails
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RatingBar
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.godparttimejob.R
+import com.google.firebase.firestore.FirebaseFirestore
 
-data class Review(
-    val userId: String = "",
-    val userName: String = "",
-    val workIntensity: Int = 0,
-    val salary: Int = 0,
-    val environment: Int = 0,
-    val comment: String = "",
-    val image1: String? = null,
-    val image2: String? = null,
-    val averageRating: Double = 0.0
-)
-
-class ReviewAdapter(private val reviews: List<Review>) :
-    RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
-
-    class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textWorkIntensity: TextView = view.findViewById(R.id.textWorkIntensity)
-        val textSalary: TextView = view.findViewById(R.id.textSalary)
-        val textEnvironment: TextView = view.findViewById(R.id.textEnvironment)
-        val textComment: TextView = view.findViewById(R.id.textReviewComment)
-        val image1: ImageView = view.findViewById(R.id.imageReview1)
-        val image2: ImageView = view.findViewById(R.id.imageReview2)
-    }
+class ReviewAdapter(
+    private val reviews: List<Review>,
+    private val db: FirebaseFirestore,
+    private val companyId: String
+) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_review, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_review, parent, false)
         return ReviewViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviews[position]
-
-        holder.textWorkIntensity.text = "근무 강도: ${review.workIntensity}/5"
-        holder.textSalary.text = "급여: ${review.salary}/5"
-        holder.textEnvironment.text = "환경: ${review.environment}/5"
-        holder.textComment.text = review.comment
-
-        if (!review.image1.isNullOrEmpty()) {
-            holder.image1.visibility = View.VISIBLE
-            Glide.with(holder.image1.context).load(review.image1).into(holder.image1)
-        } else {
-            holder.image1.visibility = View.GONE
-        }
-
-        if (!review.image2.isNullOrEmpty()) {
-            holder.image2.visibility = View.VISIBLE
-            Glide.with(holder.image2.context).load(review.image2).into(holder.image2)
-        } else {
-            holder.image2.visibility = View.GONE
-        }
+        holder.bind(review)
     }
 
-    override fun getItemCount(): Int {
-        return reviews.size
+    override fun getItemCount(): Int = reviews.size
+
+    inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val textProfileName: TextView = itemView.findViewById(R.id.textProfileName)
+        private val textWorkIntensity: TextView = itemView.findViewById(R.id.textWorkIntensity)
+        private val textSalary: TextView = itemView.findViewById(R.id.textSalary)
+        private val textEnvironment: TextView = itemView.findViewById(R.id.textEnvironment)
+        private val textComment: TextView = itemView.findViewById(R.id.textComment)
+        private val buttonReport: Button = itemView.findViewById(R.id.buttonReport)
+
+        fun bind(review: Review) {
+            textProfileName.text = review.userName
+            textWorkIntensity.text = "근무 강도: ★${review.workIntensity}"
+            textSalary.text = "급여: ★${review.salary}"
+            textEnvironment.text = "환경: ★${review.environment}"
+            textComment.text = review.comment
+
+            buttonReport.setOnClickListener {
+                showReportDialog(review)
+            }
+        }
+
+        private fun showReportDialog(review: Review) {
+            val context = itemView.context
+            val editText = EditText(context).apply {
+                hint = "신고 사유를 입력하세요"
+            }
+
+            AlertDialog.Builder(context)
+                .setTitle("리뷰 신고")
+                .setView(editText)
+                .setPositiveButton("확인") { _, _ ->
+                    val reason = editText.text.toString().trim()
+                    if (reason.isNotEmpty()) {
+                        reportReview(review, reason)
+                    } else {
+                        Toast.makeText(context, "신고 사유를 입력하세요.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton("취소", null)
+                .show()
+        }
+
+        private fun reportReview(review: Review, reason: String) {
+            val reportData = hashMapOf(
+                "reviewId" to review.id,
+                "reason" to reason,
+                "timestamp" to System.currentTimeMillis()
+            )
+            db.collection("reported_reviews").add(reportData)
+                .addOnSuccessListener {
+                    Toast.makeText(itemView.context, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(itemView.context, "신고 접수 실패!", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 }
