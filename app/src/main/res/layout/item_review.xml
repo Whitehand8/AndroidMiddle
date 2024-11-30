@@ -1,38 +1,70 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
-    android:background="@android:color/white">
+    android:padding="8dp">
 
-    <!-- 작성자 이름 -->
-    <TextView
-        android:id="@+id/textUserName"
+    <!-- 별점 텍스트 가로 배치 -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="작성자 이름"
-        android:textStyle="bold"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <!-- 근무 강도 -->
+        <TextView
+            android:id="@+id/textWorkIntensity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="근무 강도: 0/5"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="16dp" />
+
+        <!-- 급여 -->
+        <TextView
+            android:id="@+id/textSalary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="급여: 0/5"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="16dp" />
+
+        <!-- 환경 -->
+        <TextView
+            android:id="@+id/textEnvironment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="환경: 0/5"
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- 리뷰 텍스트 -->
+    <TextView
+        android:id="@+id/textReviewComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
         android:textSize="16sp"
-        android:paddingBottom="4dp" />
+        android:textColor="@android:color/black" />
 
-    <!-- 리뷰 내용 -->
-    <TextView
-        android:id="@+id/textComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="리뷰 내용"
-        android:textSize="14sp"
-        android:paddingBottom="4dp" />
+    <!-- 첫 번째 리뷰 이미지 -->
+    <ImageView
+        android:id="@+id/imageReview1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
-    <!-- 평균 평점 -->
-    <TextView
-        android:id="@+id/textAverageRating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="평균 평점: 4.5"
-        android:textSize="14sp"
-        android:textColor="@android:color/holo_blue_dark"
-        android:paddingBottom="4dp" />
-
+    <!-- 두 번째 리뷰 이미지 -->
+    <ImageView
+        android:id="@+id/imageReview2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 </LinearLayout>

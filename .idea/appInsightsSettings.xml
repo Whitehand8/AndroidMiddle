@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.example.godparttimejob" />
-                  <option name="mobileSdkAppId" value="1:827731689773:android:b4ddc05036498c407793a4" />
-                  <option name="projectId" value="godparttimejob" />
-                  <option name="projectNumber" value="827731689773" />
+                  <option name="mobileSdkAppId" value="1:56765680889:android:7db8f8f9d36b669089a628" />
+                  <option name="projectId" value="a-firebase-88b06" />
+                  <option name="projectNumber" value="56765680889" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

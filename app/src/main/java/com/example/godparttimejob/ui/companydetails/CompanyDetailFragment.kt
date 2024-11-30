@@ -8,12 +8,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.godparttimejob.R
-import com.example.godparttimejob.ui.review.WriteReviewFragment
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -25,9 +24,9 @@ class CompanyDetailFragment : Fragment() {
     private lateinit var textCompanyDescription: TextView
     private lateinit var textRecruitingStatus: TextView
     private lateinit var recyclerReviews: RecyclerView
-    private lateinit var buttonWriteReview: Button // 리뷰 작성 버튼 추가
+    private lateinit var buttonWriteReview: Button
 
-    private var companyId: String? = null // 전달받은 회사 ID
+    private var companyId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,21 +36,18 @@ class CompanyDetailFragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
 
-        // View 초기화
         imageLargeCompany = view.findViewById(R.id.imageLargeCompany)
         textCompanyName = view.findViewById(R.id.textCompanyName)
         textCompanyDescription = view.findViewById(R.id.textCompanyDescription)
         textRecruitingStatus = view.findViewById(R.id.textRecruitingStatus)
         recyclerReviews = view.findViewById(R.id.recyclerReviews)
-        buttonWriteReview = view.findViewById(R.id.buttonWriteReview) // 버튼 초기화
+        buttonWriteReview = view.findViewById(R.id.buttonWriteReview)
 
         recyclerReviews.layoutManager = LinearLayoutManager(requireContext())
 
-        // 회사 데이터 가져오기
         companyId = arguments?.getString("companyId")
         companyId?.let { loadCompanyDetails(it) }
 
-        // 리뷰 작성 페이지로 이동
         buttonWriteReview.setOnClickListener { navigateToWriteReview() }
 
         return view
@@ -70,10 +66,10 @@ class CompanyDetailFragment : Fragment() {
                     textCompanyDescription.text = description
                     textRecruitingStatus.text = if (isRecruiting) "모집 중" else "모집 종료"
 
-                    // 이미지 로드 (Glide 사용)
-                    // Glide.with(this).load(largeImageUrl).into(imageLargeCompany)
+                    if (!largeImageUrl.isNullOrEmpty()) {
+                        Glide.with(this).load(largeImageUrl).into(imageLargeCompany)
+                    }
 
-                    // 리뷰 리스트 가져오기
                     loadReviews(companyId)
                 }
             }
@@ -94,7 +90,6 @@ class CompanyDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "리뷰를 가져오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
     }
-
 
     private fun navigateToWriteReview() {
         val bundle = Bundle().apply {

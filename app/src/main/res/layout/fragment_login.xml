@@ -45,13 +45,6 @@
             android:layout_marginTop="8dp" />
 
         <Button
-            android:id="@+id/buttonAdminLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="운영자 로그인"
-            android:layout_marginTop="8dp" />
-
-        <Button
             android:id="@+id/buttonJoin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
