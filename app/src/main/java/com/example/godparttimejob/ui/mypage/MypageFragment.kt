@@ -46,22 +46,26 @@ class MypageFragment : Fragment() {
     }
 
     private fun loadUserInfo() {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            db.collection("users").document(currentUser.uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        val reviewsCount = document.getLong("reviews") ?: 0L
-                        val likesCount = document.getLong("likes") ?: 0L
-                        binding.textReviewsCount.text = "작성한 리뷰: $reviewsCount개, 받은 좋아요: $likesCount개"
-                    }
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val reviewsCount = document.getLong("reviews") ?: 0L
+                    val likesCount = document.getLong("likes") ?: 0L
+
+                    // UI에 데이터 업데이트
+                    binding.textReviewsCount.text = "작성한 리뷰: ${reviewsCount}개, 받은 좋아요: ${likesCount}개"
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "사용자 정보 로드 실패: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "데이터 로드 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

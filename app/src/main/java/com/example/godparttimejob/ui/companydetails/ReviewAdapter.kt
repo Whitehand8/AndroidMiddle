@@ -11,11 +11,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.godparttimejob.R
-import com.example.godparttimejob.ui.companydetails.Review
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ReviewAdapter(
-    private val reviews: List<Review>,
+    private val reviews: MutableList<Review>, // 리뷰 목록을 동적으로 업데이트할 수 있도록 MutableList로 변경
     private val db: FirebaseFirestore,
     private val companyId: String
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
@@ -68,8 +67,8 @@ class ReviewAdapter(
                     review.likes += 1
                     textLikeCount.text = review.likes.toString()
                 }
-                .addOnFailureListener {
-                    Toast.makeText(itemView.context, "좋아요 실패!", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener { e ->
+                    Toast.makeText(itemView.context, "좋아요 실패: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
 
@@ -104,8 +103,8 @@ class ReviewAdapter(
                 .addOnSuccessListener {
                     Toast.makeText(itemView.context, "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
                 }
-                .addOnFailureListener {
-                    Toast.makeText(itemView.context, "신고 접수 실패!", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener { e ->
+                    Toast.makeText(itemView.context, "신고 접수 실패: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }
