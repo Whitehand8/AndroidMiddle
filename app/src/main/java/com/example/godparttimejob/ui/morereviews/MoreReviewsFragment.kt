@@ -1,6 +1,6 @@
 package com.example.godparttimejob.ui.moreReviews
 
-import ReviewAdapter
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

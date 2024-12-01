@@ -1,6 +1,5 @@
 package com.example.godparttimejob.ui.companydetails
 
-import ReviewAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.godparttimejob.R
+import com.example.godparttimejob.ui.companydetails.ReviewAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -23,8 +23,10 @@ class CompanyDetailFragment : Fragment() {
     private lateinit var textCompanyAddress: TextView
     private lateinit var textRecruitingStatus: TextView
     private lateinit var recyclerReviews: RecyclerView
-    private lateinit var buttonWriteReview: Button
+    private lateinit var recyclerHistory: RecyclerView
     private lateinit var buttonMoreReviews: Button
+    private lateinit var buttonMoreHistory: Button
+    private lateinit var buttonWriteReview: Button
 
     private var companyId: String? = null
 
@@ -43,16 +45,20 @@ class CompanyDetailFragment : Fragment() {
         textCompanyAddress = view.findViewById(R.id.textCompanyAddress)
         textRecruitingStatus = view.findViewById(R.id.textRecruitingStatus)
         recyclerReviews = view.findViewById(R.id.recyclerReviews)
-        buttonWriteReview = view.findViewById(R.id.buttonWriteReview)
+        recyclerHistory = view.findViewById(R.id.recyclerHistory)
         buttonMoreReviews = view.findViewById(R.id.buttonMoreReviews)
+        buttonMoreHistory = view.findViewById(R.id.buttonMoreHistory)
+        buttonWriteReview = view.findViewById(R.id.buttonWriteReview)
 
         recyclerReviews.layoutManager = LinearLayoutManager(requireContext())
+        recyclerHistory.layoutManager = LinearLayoutManager(requireContext())
 
         companyId = arguments?.getString("companyId")
         companyId?.let { loadCompanyDetails(it) }
 
-        buttonWriteReview.setOnClickListener { navigateToWriteReview() }
         buttonMoreReviews.setOnClickListener { navigateToMoreReviews() }
+        buttonMoreHistory.setOnClickListener { navigateToMoreHistory() }
+        buttonWriteReview.setOnClickListener { navigateToWriteReview() }
 
         return view
     }
@@ -77,6 +83,7 @@ class CompanyDetailFragment : Fragment() {
                     }
 
                     loadReviews(companyId)
+                    loadHistory(companyId)
                 }
             }
             .addOnFailureListener {
@@ -87,34 +94,47 @@ class CompanyDetailFragment : Fragment() {
     private fun loadReviews(companyId: String) {
         db.collection("companies").document(companyId).collection("reviews")
             .orderBy("createdAt", Query.Direction.DESCENDING)
-            .limit(3) // 최신 리뷰 3개만 로드
+            .limit(3)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val reviews = querySnapshot.toObjects(Review::class.java)
-                recyclerReviews.adapter = ReviewAdapter(reviews, db, companyId!!)
+                recyclerReviews.adapter = ReviewAdapter(reviews, db, companyId)
             }
             .addOnFailureListener {
                 Toast.makeText(requireContext(), "리뷰를 가져오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun navigateToWriteReview() {
-        val bundle = Bundle().apply {
-            putString("companyId", companyId)
-        }
-        view?.let { currentView ->
-            androidx.navigation.Navigation.findNavController(currentView)
-                .navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle)
-        }
+    private fun loadHistory(companyId: String) {
+        db.collection("companies").document(companyId).collection("history")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(3)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val historyList = querySnapshot.toObjects(JobHistory::class.java)
+                recyclerHistory.adapter = JobHistoryAdapter(historyList)
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "공고 내역을 가져오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun navigateToMoreReviews() {
-        val bundle = Bundle().apply {
-            putString("companyId", companyId)
+        val bundle = Bundle().apply { putString("companyId", companyId) }
+        view?.let { androidx.navigation.Navigation.findNavController(it).navigate(R.id.action_companyDetailFragment_to_moreReviewsFragment, bundle) }
+    }
+
+    private fun navigateToMoreHistory() {
+        val bundle = Bundle().apply { putString("companyId", companyId) }
+        view?.let {
+            androidx.navigation.Navigation.findNavController(it)
+                .navigate(R.id.action_companyDetailFragment_to_moreHistoryFragment, bundle)
         }
-        view?.let { currentView ->
-            androidx.navigation.Navigation.findNavController(currentView)
-                .navigate(R.id.action_companyDetailFragment_to_MoreReviewsFragment, bundle)
-        }
+    }
+
+
+    private fun navigateToWriteReview() {
+        val bundle = Bundle().apply { putString("companyId", companyId) }
+        view?.let { androidx.navigation.Navigation.findNavController(it).navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle) }
     }
 }

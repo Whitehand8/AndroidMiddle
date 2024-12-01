@@ -11,7 +11,6 @@
         android:name="com.example.godparttimejob.ui.login.LoginFragment"
         android:label="로그인"
         tools:layout="@layout/fragment_login">
-        <!-- 로그인 후 홈 화면으로 이동 -->
         <action
             android:id="@+id/action_loginFragment_to_nav_home"
             app:destination="@id/nav_home" />
@@ -55,8 +54,11 @@
             android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
             app:destination="@id/writeReviewFragment" />
         <action
-            android:id="@+id/action_companyDetailFragment_to_MoreReviewsFragment"
-            app:destination="@id/moreReviewsFragment" /> <!-- 리뷰 더보기 액션 추가 -->
+            android:id="@+id/action_companyDetailFragment_to_moreReviewsFragment"
+            app:destination="@id/moreReviewsFragment" />
+        <action
+            android:id="@+id/action_companyDetailFragment_to_moreHistoryFragment"
+            app:destination="@id/moreHistoryFragment" />
     </fragment>
 
     <!-- 리뷰 작성 Fragment -->
@@ -71,7 +73,22 @@
         android:id="@+id/moreReviewsFragment"
         android:name="com.example.godparttimejob.ui.moreReviews.MoreReviewsFragment"
         android:label="리뷰 더보기"
-        tools:layout="@layout/fragment_more_reviews" /> <!-- 새로운 리뷰 더보기 Fragment 추가 -->
+        tools:layout="@layout/fragment_more_reviews">
+        <argument
+            android:name="companyId"
+            app:argType="string" />
+    </fragment>
+
+    <!-- 공고 더보기 Fragment -->
+    <fragment
+        android:id="@+id/moreHistoryFragment"
+        android:name="com.example.godparttimejob.ui.morehistory.MoreHistoryFragment"
+        android:label="공고 더보기"
+        tools:layout="@layout/fragment_more_history">
+        <argument
+            android:name="companyId"
+            app:argType="string" />
+    </fragment>
 
     <!-- 회사 설정 Fragment -->
     <fragment

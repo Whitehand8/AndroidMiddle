@@ -8,6 +8,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- 회사 이미지 -->
         <ImageView
             android:id="@+id/imageLargeCompany"
             android:layout_width="match_parent"
@@ -15,6 +16,7 @@
             android:scaleType="centerCrop"
             android:background="@android:color/darker_gray" />
 
+        <!-- 회사 이름 -->
         <TextView
             android:id="@+id/textCompanyName"
             android:layout_width="match_parent"
@@ -22,6 +24,7 @@
             android:textSize="20sp"
             android:paddingTop="8dp" />
 
+        <!-- 회사 설명 -->
         <TextView
             android:id="@+id/textCompanyDescription"
             android:layout_width="match_parent"
@@ -29,6 +32,7 @@
             android:textSize="16sp"
             android:paddingTop="4dp" />
 
+        <!-- 회사 주소 -->
         <TextView
             android:id="@+id/textCompanyAddress"
             android:layout_width="match_parent"
@@ -38,6 +42,7 @@
             android:paddingTop="4dp"
             android:textColor="@android:color/black" />
 
+        <!-- 모집 여부 -->
         <TextView
             android:id="@+id/textRecruitingStatus"
             android:layout_width="match_parent"
@@ -45,6 +50,7 @@
             android:paddingTop="8dp"
             android:textColor="@android:color/holo_green_dark" />
 
+        <!-- 리뷰 리스트 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,18 +63,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- 리뷰 더보기 버튼 -->
         <Button
             android:id="@+id/buttonMoreReviews"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="더보기"
-            android:layout_marginTop="8dp" />
+            android:text="리뷰 더보기"
+            android:layout_marginTop="16dp" />
 
+        <!-- 리뷰 작성 버튼 -->
         <Button
             android:id="@+id/buttonWriteReview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="리뷰 작성하기"
+            android:layout_marginTop="16dp" />
+
+        <!-- 공고 내역 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="공고 내역"
+            android:paddingTop="16dp"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- 공고 더보기 버튼 -->
+        <Button
+            android:id="@+id/buttonMoreHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="공고 더보기"
             android:layout_marginTop="16dp" />
     </LinearLayout>
 </ScrollView>
