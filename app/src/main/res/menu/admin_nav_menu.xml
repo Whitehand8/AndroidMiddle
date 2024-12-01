@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/nav_home"
+        android:title="홈" />
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/nav_search"
+        android:title="검색" />
+    <item
+        android:id="@+id/nav_admin"
+        android:icon="@drawable/nav_report"
+        android:title="신고 내역" />
+    <item
+        android:id="@+id/nav_company"
+        android:icon="@drawable/nav_addcompany"
+        android:title="회사 등록" />
+</menu>

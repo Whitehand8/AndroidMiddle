@@ -1,0 +1,85 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- 프로필과 사용자 이름을 한 줄에 배치 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <!-- 프로필 사진 -->
+        <ImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_profile_placeholder"
+            android:contentDescription="@string/profile_image"
+            android:layout_marginEnd="8dp" />
+
+        <!-- 사용자 이름 -->
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사용자 이름"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 회사 이름 -->
+    <TextView
+        android:id="@+id/textCompanyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회사 이름"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- 리뷰 내용 -->
+    <TextView
+        android:id="@+id/textReviewContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="리뷰 내용"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 리뷰 이미지 -->
+    <ImageView
+        android:id="@+id/imageReviewImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/review_image"
+        android:visibility="gone" />
+
+    <!-- 승인 및 삭제 버튼 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/buttonApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="승인"
+            android:backgroundTint="@color/green"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/red"
+            android:text="삭제" />
+    </LinearLayout>
+</LinearLayout>
