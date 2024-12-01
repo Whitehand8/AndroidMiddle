@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,29 +16,34 @@
         android:theme="@style/Theme.GodPartTimeJob"
         tools:targetApi="31">
 
-        <!-- SplashActivity (앱 시작 화면) -->
+        <!-- Splash Activity (앱 시작 화면) -->
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- MainActivity (일반 사용자 대시보드) -->
+        <!-- Main Activity (일반 사용자 대시보드) -->
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.GodPartTimeJob"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.GodPartTimeJob" />
 
-        <!-- AdminDashboardActivity (운영자 대시보드) -->
-        <!--<activity
-            android:name=".ui.admin.AdminDashboardActivity"
-            android:theme="@style/Theme.GodPartTimeJob"
-            android:exported="true" />
-        -->
+        <!-- Settings Activity -->
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="Settings Activity" /> <!-- 앱 설정 화면 -->
+
+        <!-- User Reviews Activity -->
+        <activity
+            android:name=".ui.reviews.UserReviewsActivity"
+            android:exported="false"
+            android:label="User Reviews Activity" /> <!-- 사용자 리뷰 관리 화면 -->
+
     </application>
-
 </manifest>
