@@ -2,6 +2,8 @@ package com.example.godparttimejob.ui.settingcompany
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,12 +12,14 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.godparttimejob.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 import java.util.*
-
+//언제나 여러분과 24시간 함께하는 GU입니다!
 class SettingCompanyFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
@@ -109,7 +113,93 @@ class SettingCompanyFragment : Fragment() {
         }
     }
 
-    private fun uploadImageToStorage(uri: Uri?, onComplete: (String?) -> Unit) {
+    private fun resizeImageWithAspect(
+        uri: Uri?,
+        maxWidth: Int,
+        maxHeight: Int,
+        isLargeImage: Boolean,
+        onComplete: (ByteArray?) -> Unit
+    ) {
+        if (uri == null) {
+            onComplete(null)
+            return
+        }
+
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val originalBitmap = BitmapFactory.decodeStream(inputStream)
+
+            // 가로와 세로의 비율 유지하며 리사이징
+            val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height
+            val targetWidth: Int
+            val targetHeight: Int
+
+            if (isLargeImage) {
+                // 큰 이미지는 가로 비중을 높여서 4:3 비율로 조정
+                targetWidth = maxWidth
+                targetHeight = (maxWidth / aspectRatio).toInt()
+            } else {
+                // 아이콘 이미지는 정사각형으로 조정
+                targetWidth = maxWidth
+                targetHeight = maxHeight
+            }
+
+            val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, targetWidth, targetHeight, true)
+
+            // Bitmap을 ByteArray로 변환
+            val outputStream = ByteArrayOutputStream()
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+            onComplete(outputStream.toByteArray())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onComplete(null)
+        }
+    }
+
+    private fun resizeImage(
+        uri: Uri?,
+        maxWidth: Int,
+        maxHeight: Int,
+        isLargeImage: Boolean,
+        onComplete: (ByteArray?) -> Unit
+    ) {
+        if (uri == null) {
+            onComplete(null)
+            return
+        }
+
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            val originalBitmap = BitmapFactory.decodeStream(inputStream)
+
+            // 가로와 세로 비율 유지
+            val aspectRatio = originalBitmap.width.toFloat() / originalBitmap.height
+            val targetWidth: Int
+            val targetHeight: Int
+
+            if (isLargeImage) {
+                // 큰 이미지는 4:3 비율
+                targetWidth = maxWidth
+                targetHeight = (maxWidth * 3) / 4 // 4:3 비율
+            } else {
+                // 아이콘은 정사각형
+                targetWidth = maxWidth
+                targetHeight = maxHeight
+            }
+
+            val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, targetWidth, targetHeight, true)
+
+            // Bitmap을 ByteArray로 변환
+            val outputStream = ByteArrayOutputStream()
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+            onComplete(outputStream.toByteArray())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            onComplete(null)
+        }
+    }
+
+    private fun uploadImageToStorage(uri: Uri?, isIcon: Boolean, onComplete: (String?) -> Unit) {
         if (uri == null) {
             onComplete(null)
             return
@@ -118,15 +208,25 @@ class SettingCompanyFragment : Fragment() {
         val filename = UUID.randomUUID().toString() + ".jpg"
         val ref = storage.reference.child("company_images/$filename")
 
-        ref.putFile(uri)
-            .addOnSuccessListener {
-                ref.downloadUrl.addOnSuccessListener { url ->
-                    onComplete(url.toString())
-                }
-            }
-            .addOnFailureListener {
+        val maxWidth = if (isIcon) 150 else 1024 // 아이콘: 150px, 큰 이미지: 1024px
+        val maxHeight = if (isIcon) 150 else 768 // 아이콘: 150px, 큰 이미지: 768px
+
+        resizeImage(uri, maxWidth, maxHeight, !isIcon) { resizedBytes ->
+            if (resizedBytes == null) {
                 onComplete(null)
+                return@resizeImage
             }
+
+            ref.putBytes(resizedBytes)
+                .addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener { url ->
+                        onComplete(url.toString())
+                    }
+                }
+                .addOnFailureListener {
+                    onComplete(null)
+                }
+        }
     }
 
     private fun registerCompany() {
@@ -140,14 +240,14 @@ class SettingCompanyFragment : Fragment() {
             return
         }
 
-        uploadImageToStorage(largeImageUri) { largeUrl ->
+        uploadImageToStorage(largeImageUri, false) { largeUrl ->
             if (largeUrl == null) {
                 Toast.makeText(requireContext(), "큰 이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
                 return@uploadImageToStorage
             }
             largeImageUrl = largeUrl
 
-            uploadImageToStorage(iconImageUri) { iconUrl ->
+            uploadImageToStorage(iconImageUri, true) { iconUrl ->
                 if (iconUrl == null) {
                     Toast.makeText(requireContext(), "아이콘 이미지 업로드 실패!", Toast.LENGTH_SHORT).show()
                     return@uploadImageToStorage
@@ -168,7 +268,10 @@ class SettingCompanyFragment : Fragment() {
                     .add(companyData)
                     .addOnSuccessListener {
                         Toast.makeText(requireContext(), "회사 등록 성공!", Toast.LENGTH_SHORT).show()
-                        requireActivity().onBackPressed()
+
+                        // 홈 화면으로 이동
+                        val navController = requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+                        navController.navigate(R.id.nav_home)
                     }
                     .addOnFailureListener { e ->
                         Toast.makeText(requireContext(), "회사 등록 실패: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -176,4 +279,5 @@ class SettingCompanyFragment : Fragment() {
             }
         }
     }
+
 }
