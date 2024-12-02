@@ -30,7 +30,29 @@
             android:id="@+id/nav_search"
             android:name="com.example.godparttimejob.ui.search.SearchFragment"
             android:label="검색"
-            tools:layout="@layout/fragment_search" />
+            tools:layout="@layout/fragment_search">
+            <action
+                android:id="@+id/action_nav_search_to_companyDetailFragment"
+                app:destination="@id/companyDetailFragment" />
+        </fragment>
+
+        <!-- 회사 상세 정보 Fragment -->
+        <fragment
+            android:id="@+id/companyDetailFragment"
+            android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
+            android:label="회사 상세 정보"
+            tools:layout="@layout/fragment_company_detail">
+            <action
+                android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
+                app:destination="@id/writeReviewFragment" />
+            <action
+                android:id="@+id/action_companyDetailFragment_to_moreReviewsFragment"
+                app:destination="@id/moreReviewsFragment" />
+            <action
+                android:id="@+id/action_companyDetailFragment_to_moreHistoryFragment"
+                app:destination="@id/moreHistoryFragment" />
+        </fragment>
+
 
         <!-- 즐겨찾기 Fragment (일반 사용자 전용) -->
         <fragment

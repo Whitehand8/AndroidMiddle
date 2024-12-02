@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp">
+
+    <!-- 회사 아이콘 -->
+    <ImageView
+        android:id="@+id/imageCompanyIcon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="12dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_no_image" />
+
+    <!-- 회사 정보 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textCompanyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회사 이름"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <!-- 모집 여부와 별점 평균을 가로 배치 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <!-- 모집 여부 -->
+            <TextView
+                android:id="@+id/textCompanyStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="모집 중"
+                android:textSize="14sp"
+                android:layout_marginEnd="16dp" /> <!-- 간격 추가 -->
+
+            <!-- 별점 평균 -->
+            <TextView
+                android:id="@+id/textCompanyRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="별점 평균: 4.5 (12)"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 즐겨찾기 아이콘 -->
+    <ImageView
+        android:id="@+id/imageFavorite"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="즐겨찾기 추가"
+        android:src="@drawable/ic_star_outline" />
+</LinearLayout>
