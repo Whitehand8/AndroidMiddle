@@ -48,18 +48,7 @@ class LoginFragment : Fragment() {
         }
 
         registerButton.setOnClickListener {
-            val email = emailEditText.text.toString().trim()
-            val password = passwordEditText.text.toString().trim()
-
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                if (password.length < 6) {
-                    Toast.makeText(requireContext(), "비밀번호는 최소 6자 이상이어야 합니다.", Toast.LENGTH_LONG).show()
-                } else {
-                    registerUser(email, password)
-                }
-            } else {
-                Toast.makeText(requireContext(), "회원가입을 위해 이메일과 비밀번호를 입력해주세요!", Toast.LENGTH_LONG).show()
-            }
+            // 회원가입 로직
         }
 
         return view
@@ -69,57 +58,30 @@ class LoginFragment : Fragment() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    db.collection("admins")
-                        .whereEqualTo("email", email)
-                        .get()
-                        .addOnSuccessListener { querySnapshot ->
-                            if (!querySnapshot.isEmpty) {
+                    val userId = auth.currentUser?.uid
+                    db.collection("users").document(userId!!).get()
+                        .addOnSuccessListener { document ->
+                            val role = document.getString("role")
+                            if (role == "admin") {
                                 navigateToAdminDashboard()
                             } else {
                                 navigateToUserDashboard()
                             }
                         }
                         .addOnFailureListener {
-                            Toast.makeText(requireContext(), "운영자 확인 중 오류 발생!", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "로그인 데이터 로드 실패.", Toast.LENGTH_SHORT).show()
                         }
                 } else {
-                    Toast.makeText(requireContext(), "로그인 실패: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                }
-            }
-    }
-
-    private fun registerUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    user?.let {
-                        val userData = hashMapOf(
-                            "email" to it.email,
-                            "role" to "user",
-                            "createdAt" to System.currentTimeMillis()
-                        )
-
-                        db.collection("users").document(it.uid)
-                            .set(userData)
-                            .addOnSuccessListener {
-                                Toast.makeText(requireContext(), "회원가입 성공!", Toast.LENGTH_LONG).show()
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(requireContext(), "Firestore 저장 실패: ${e.message}", Toast.LENGTH_LONG).show()
-                            }
-                    }
-                } else {
-                    Toast.makeText(requireContext(), "회원가입 실패!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "로그인 실패: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun navigateToAdminDashboard() {
-        findNavController().navigate(R.id.nav_admin)
+        findNavController().navigate(R.id.action_loginFragment_to_nav_admin_reported)
     }
 
     private fun navigateToUserDashboard() {
-        findNavController().navigate(R.id.nav_home)
+        findNavController().navigate(R.id.action_loginFragment_to_nav_home)
     }
 }

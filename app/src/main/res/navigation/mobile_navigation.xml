@@ -1,89 +1,120 @@
-<?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/loginFragment">
+    <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mobile_navigation"
+        app:startDestination="@+id/loginFragment">
 
-    <!-- 로그인 Fragment -->
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.godparttimejob.ui.login.LoginFragment"
-        android:label="로그인"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_nav_home"
-            app:destination="@id/nav_home" />
-    </fragment>
+        <!-- 로그인 Fragment -->
+        <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.example.godparttimejob.ui.login.LoginFragment"
+            android:label="로그인"
+            tools:layout="@layout/fragment_login">
+            <action
+                android:id="@+id/action_loginFragment_to_nav_home"
+                app:destination="@id/nav_home" />
+            <action
+                android:id="@+id/action_loginFragment_to_nav_admin_reported"
+                app:destination="@id/nav_admin_reported" />
+        </fragment>
 
-    <!-- 사용자 홈 Fragment -->
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.godparttimejob.ui.home.HomeFragment"
-        android:label="홈"
-        tools:layout="@layout/fragment_home" />
+        <!-- 사용자 홈 Fragment -->
+        <fragment
+            android:id="@+id/nav_home"
+            android:name="com.example.godparttimejob.ui.home.HomeFragment"
+            android:label="홈"
+            tools:layout="@layout/fragment_home" />
 
-    <!-- 회사 상세 정보 Fragment -->
-    <fragment
-        android:id="@+id/companyDetailFragment"
-        android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
-        android:label="회사 상세 정보"
-        tools:layout="@layout/fragment_company_detail">
-        <action
-            android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
-            app:destination="@id/writeReviewFragment" />
-        <action
-            android:id="@+id/action_companyDetailFragment_to_moreReviewsFragment"
-            app:destination="@id/moreReviewsFragment" />
-        <action
-            android:id="@+id/action_companyDetailFragment_to_moreHistoryFragment"
-            app:destination="@id/moreHistoryFragment" />
-    </fragment>
+        <!-- 검색 Fragment -->
+        <fragment
+            android:id="@+id/nav_search"
+            android:name="com.example.godparttimejob.ui.search.SearchFragment"
+            android:label="검색"
+            tools:layout="@layout/fragment_search" />
 
-    <!-- 리뷰 작성 Fragment -->
-    <fragment
-        android:id="@+id/writeReviewFragment"
-        android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
-        android:label="리뷰 작성"
-        tools:layout="@layout/fragment_write_review">
-        <argument
-            android:name="companyId"
-            app:argType="string" />
-    </fragment>
+        <!-- 즐겨찾기 Fragment (일반 사용자 전용) -->
+        <fragment
+            android:id="@+id/nav_favorite"
+            android:name="com.example.godparttimejob.ui.favorite.FavoriteFragment"
+            android:label="즐겨찾기"
+            tools:layout="@layout/fragment_favorite" />
 
-    <!-- 리뷰 더보기 Fragment -->
-    <fragment
-        android:id="@+id/moreReviewsFragment"
-        android:name="com.example.godparttimejob.ui.moreReviews.MoreReviewsFragment"
-        android:label="리뷰 더보기"
-        tools:layout="@layout/fragment_more_reviews">
-        <argument
-            android:name="companyId"
-            app:argType="string" />
-    </fragment>
+        <!-- 마이페이지 Fragment (일반 사용자 전용) -->
+        <fragment
+            android:id="@+id/nav_mypage"
+            android:name="com.example.godparttimejob.ui.mypage.MypageFragment"
+            android:label="마이페이지"
+            tools:layout="@layout/fragment_mypage" />
 
-    <!-- 공고 더보기 Fragment -->
-    <fragment
-        android:id="@+id/moreHistoryFragment"
-        android:name="com.example.godparttimejob.ui.morehistory.MoreHistoryFragment"
-        android:label="공고 더보기"
-        tools:layout="@layout/fragment_more_history">
-        <argument
-            android:name="companyId"
-            app:argType="string" />
-    </fragment>
+        <!-- 신고된 리뷰 Fragment (운영자 전용) -->
+        <fragment
+            android:id="@+id/nav_admin_reported"
+            android:name="com.example.godparttimejob.ui.admin.ReportedReviewsFragment"
+            android:label="신고된 리뷰"
+            tools:layout="@layout/fragment_reported_reviews">
+            <action
+                android:id="@+id/action_nav_admin_reported_to_nav_admin_company"
+                app:destination="@id/nav_admin_company" />
+        </fragment>
 
-    <!-- 신고된 리뷰 Fragment -->
-    <fragment
-        android:id="@+id/nav_admin_reported"
-        android:name="com.example.godparttimejob.ui.admin.ReportedReviewsFragment"
-        android:label="신고된 리뷰"
-        tools:layout="@layout/fragment_reported_reviews" />
+        <!-- 회사 등록 Fragment (운영자 전용) -->
+        <fragment
+            android:id="@+id/nav_admin_company"
+            android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
+            android:label="회사 등록"
+            tools:layout="@layout/fragment_setting_company">
+            <action
+                android:id="@+id/action_nav_admin_company_to_nav_admin_reported"
+                app:destination="@id/nav_admin_reported" />
+        </fragment>
 
-    <!-- 회사 등록 Fragment -->
-    <fragment
-        android:id="@+id/nav_admin_company"
-        android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
-        android:label="회사 등록"
-        tools:layout="@layout/fragment_setting_company" />
-</navigation>
+        <!-- 회사 상세 정보 Fragment -->
+        <fragment
+            android:id="@+id/companyDetailFragment"
+            android:name="com.example.godparttimejob.ui.companydetails.CompanyDetailFragment"
+            android:label="회사 상세 정보"
+            tools:layout="@layout/fragment_company_detail">
+            <action
+                android:id="@+id/action_companyDetailFragment_to_writeReviewFragment"
+                app:destination="@id/writeReviewFragment" />
+            <action
+                android:id="@+id/action_companyDetailFragment_to_moreReviewsFragment"
+                app:destination="@id/moreReviewsFragment" />
+            <action
+                android:id="@+id/action_companyDetailFragment_to_moreHistoryFragment"
+                app:destination="@id/moreHistoryFragment" />
+        </fragment>
+
+        <!-- 리뷰 작성 Fragment -->
+        <fragment
+            android:id="@+id/writeReviewFragment"
+            android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
+            android:label="리뷰 작성"
+            tools:layout="@layout/fragment_write_review">
+            <argument
+                android:name="companyId"
+                app:argType="string" />
+        </fragment>
+
+        <!-- 리뷰 더보기 Fragment -->
+        <fragment
+            android:id="@+id/moreReviewsFragment"
+            android:name="com.example.godparttimejob.ui.moreReviews.MoreReviewsFragment"
+            android:label="리뷰 더보기"
+            tools:layout="@layout/fragment_more_reviews">
+            <argument
+                android:name="companyId"
+                app:argType="string" />
+        </fragment>
+
+        <!-- 공고 더보기 Fragment -->
+        <fragment
+            android:id="@+id/moreHistoryFragment"
+            android:name="com.example.godparttimejob.ui.morehistory.MoreHistoryFragment"
+            android:label="공고 더보기"
+            tools:layout="@layout/fragment_more_history">
+            <argument
+                android:name="companyId"
+                app:argType="string" />
+        </fragment>
+    </navigation>

@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         setupUserRoleBasedNavigation()
 
-        // Handle visibility of ActionBar and BottomNavigationView
+        // ActionBar 및 BottomNavigationView 제어
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.loginFragment) {
                 supportActionBar?.hide()
@@ -38,18 +38,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Navigate to login if required
         if (intent.getBooleanExtra("navigateToLogin", false)) {
             navController.navigate(R.id.loginFragment)
         }
     }
 
     private fun setupUserRoleBasedNavigation() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        if (userId == null) {
-            setupUserNavigation()
-            return
-        }
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         val db = FirebaseFirestore.getInstance()
         db.collection("users").document(userId).get()
@@ -62,16 +57,17 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
+                // 실패 시 기본 사용자 메뉴 설정
                 setupUserNavigation()
             }
     }
 
     private fun setupNavigation(menuRes: Int, appBarDestinations: Set<Int>) {
         val appBarConfiguration = AppBarConfiguration(appBarDestinations)
-        binding.navView.menu.clear()
-        binding.navView.inflateMenu(menuRes)
+        binding.navView.menu.clear()  // 기존 메뉴 삭제
+        binding.navView.inflateMenu(menuRes) // 새로운 메뉴 로드
         setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController) // 네비게이션 컨트롤러 연결
     }
 
     private fun setupUserNavigation() {
