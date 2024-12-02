@@ -16,33 +16,12 @@
             app:destination="@id/nav_home" />
     </fragment>
 
-    <!-- 홈 Fragment -->
+    <!-- 사용자 홈 Fragment -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.godparttimejob.ui.home.HomeFragment"
-        android:label="@string/nav_1"
+        android:label="홈"
         tools:layout="@layout/fragment_home" />
-
-    <!-- 검색 Fragment -->
-    <fragment
-        android:id="@+id/nav_search"
-        android:name="com.example.godparttimejob.ui.search.SearchFragment"
-        android:label="@string/nav_2"
-        tools:layout="@layout/fragment_search" />
-
-    <!-- 즐겨찾기 Fragment -->
-    <fragment
-        android:id="@+id/nav_favorite"
-        android:name="com.example.godparttimejob.ui.favorite.FavoriteFragment"
-        android:label="@string/nav_3"
-        tools:layout="@layout/fragment_favorite" />
-
-    <!-- 마이페이지 Fragment -->
-    <fragment
-        android:id="@+id/nav_mypage"
-        android:name="com.example.godparttimejob.ui.mypage.MypageFragment"
-        android:label="@string/nav_4"
-        tools:layout="@layout/fragment_mypage" />
 
     <!-- 회사 상세 정보 Fragment -->
     <fragment
@@ -66,7 +45,11 @@
         android:id="@+id/writeReviewFragment"
         android:name="com.example.godparttimejob.ui.review.WriteReviewFragment"
         android:label="리뷰 작성"
-        tools:layout="@layout/fragment_write_review" />
+        tools:layout="@layout/fragment_write_review">
+        <argument
+            android:name="companyId"
+            app:argType="string" />
+    </fragment>
 
     <!-- 리뷰 더보기 Fragment -->
     <fragment
@@ -90,23 +73,16 @@
             app:argType="string" />
     </fragment>
 
-    <!-- 회사 설정 Fragment -->
+    <!-- 신고된 리뷰 Fragment -->
     <fragment
-        android:id="@+id/settingCompanyFragment"
-        android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
-        android:label="회사 설정"
-        tools:layout="@layout/fragment_setting_company" />
-
-    <!-- 운영자 신고 내역 Fragment -->
-    <fragment
-        android:id="@+id/nav_admin"
+        android:id="@+id/nav_admin_reported"
         android:name="com.example.godparttimejob.ui.admin.ReportedReviewsFragment"
-        android:label="신고 내역"
+        android:label="신고된 리뷰"
         tools:layout="@layout/fragment_reported_reviews" />
 
-    <!-- 운영자 회사 등록 Fragment -->
+    <!-- 회사 등록 Fragment -->
     <fragment
-        android:id="@+id/nav_company"
+        android:id="@+id/nav_admin_company"
         android:name="com.example.godparttimejob.ui.settingcompany.SettingCompanyFragment"
         android:label="회사 등록"
         tools:layout="@layout/fragment_setting_company" />

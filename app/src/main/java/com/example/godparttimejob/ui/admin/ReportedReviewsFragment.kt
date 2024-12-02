@@ -93,6 +93,8 @@ class ReportedReviewsFragment : Fragment() {
                     Glide.with(itemView.context)
                         .load(reportedReview.imageUrl)
                         .into(imageReviewImage)
+                } else {
+                    imageReviewImage.visibility = View.GONE
                 }
 
                 buttonApprove.setOnClickListener { approveReview(reportedReview) }
@@ -111,7 +113,7 @@ class ReportedReviewsFragment : Fragment() {
                             .delete()
                             .addOnSuccessListener {
                                 Toast.makeText(itemView.context, "리뷰가 승인되었습니다.", Toast.LENGTH_SHORT).show()
-                                loadReportedReviews() // 업데이트된 목록 로드
+                                loadReportedReviews()
                             }
                     }
                     .addOnFailureListener { e ->
@@ -134,7 +136,7 @@ class ReportedReviewsFragment : Fragment() {
                                     .delete()
                                     .addOnSuccessListener {
                                         Toast.makeText(itemView.context, "리뷰가 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-                                        loadReportedReviews() // 업데이트된 목록 로드
+                                        loadReportedReviews()
                                     }
                             }
                     }
@@ -157,5 +159,5 @@ data class ReportedReview(
     val profileImageUrl: String? = null,
     val reportCount: Int = 0,
     val reviewId: String = "",
-    val userReviewCount: Long = 0 // 유저가 작성한 리뷰 수
+    val userReviewCount: Long = 0
 )

@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.godparttimejob.R
-import com.example.godparttimejob.ui.companydetails.ReviewAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -121,20 +121,16 @@ class CompanyDetailFragment : Fragment() {
 
     private fun navigateToMoreReviews() {
         val bundle = Bundle().apply { putString("companyId", companyId) }
-        view?.let { androidx.navigation.Navigation.findNavController(it).navigate(R.id.action_companyDetailFragment_to_moreReviewsFragment, bundle) }
+        findNavController().navigate(R.id.action_companyDetailFragment_to_moreReviewsFragment, bundle)
     }
 
     private fun navigateToMoreHistory() {
         val bundle = Bundle().apply { putString("companyId", companyId) }
-        view?.let {
-            androidx.navigation.Navigation.findNavController(it)
-                .navigate(R.id.action_companyDetailFragment_to_moreHistoryFragment, bundle)
-        }
+        findNavController().navigate(R.id.action_companyDetailFragment_to_moreHistoryFragment, bundle)
     }
-
 
     private fun navigateToWriteReview() {
         val bundle = Bundle().apply { putString("companyId", companyId) }
-        view?.let { androidx.navigation.Navigation.findNavController(it).navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle) }
+        findNavController().navigate(R.id.action_companyDetailFragment_to_writeReviewFragment, bundle)
     }
 }

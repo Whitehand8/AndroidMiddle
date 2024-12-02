@@ -1,0 +1,21 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/buttonReportedReviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="신고 내역 보기"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/buttonCompanyRegistration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="회사 등록"
+        android:layout_marginBottom="16dp" />
+</LinearLayout>

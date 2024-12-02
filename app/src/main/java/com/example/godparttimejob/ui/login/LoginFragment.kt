@@ -1,6 +1,5 @@
 package com.example.godparttimejob.ui.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.godparttimejob.MainActivity
+import androidx.navigation.fragment.findNavController
 import com.example.godparttimejob.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -67,14 +65,27 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+    private fun loginUser(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    db.collection("admins")
+                        .whereEqualTo("email", email)
+                        .get()
+                        .addOnSuccessListener { querySnapshot ->
+                            if (!querySnapshot.isEmpty) {
+                                navigateToAdminDashboard()
+                            } else {
+                                navigateToUserDashboard()
+                            }
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "운영자 확인 중 오류 발생!", Toast.LENGTH_LONG).show()
+                        }
+                } else {
+                    Toast.makeText(requireContext(), "로그인 실패: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     private fun registerUser(email: String, password: String) {
@@ -104,41 +115,11 @@ class LoginFragment : Fragment() {
             }
     }
 
-    private fun loginUser(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    db.collection("admins")
-                        .whereEqualTo("email", email)
-                        .whereEqualTo("password", password)
-                        .get()
-                        .addOnSuccessListener { querySnapshot ->
-                            if (!querySnapshot.isEmpty) {
-                                Toast.makeText(requireContext(), "운영자로 로그인하였습니다.", Toast.LENGTH_LONG).show()
-                                navigateToAdminDashboard()
-                            } else {
-                                Toast.makeText(requireContext(), "사용자로 로그인하였습니다.", Toast.LENGTH_LONG).show()
-                                navigateToUserDashboard()
-                            }
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(requireContext(), "데이터베이스 확인 중 오류 발생!", Toast.LENGTH_LONG).show()
-                        }
-                } else {
-                    Toast.makeText(requireContext(), "로그인 실패!", Toast.LENGTH_LONG).show()
-                }
-            }
-    }
-
     private fun navigateToAdminDashboard() {
-        val intent = Intent(requireContext(), MainActivity::class.java) // 운영자 전용 화면으로 변경 가능
-        startActivity(intent)
-        requireActivity().finish()
+        findNavController().navigate(R.id.nav_admin)
     }
 
     private fun navigateToUserDashboard() {
-        val intent = Intent(requireContext(), MainActivity::class.java) // 사용자 전용 화면으로 변경 가능
-        startActivity(intent)
-        requireActivity().finish()
+        findNavController().navigate(R.id.nav_home)
     }
 }

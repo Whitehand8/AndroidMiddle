@@ -8,7 +8,8 @@
     <string name="nav_2">검색</string>
     <string name="nav_3">즐겨찾기</string>
     <string name="nav_4">마이페이지</string>
-    <string name="profile_image">프로필 사진</string>
-    <string name="review_image">리뷰 사진</string>
+    <string name="profile_image_placeholder">프로필 이미지</string>
+    <string name="review_image_placeholder">리뷰 이미지</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
